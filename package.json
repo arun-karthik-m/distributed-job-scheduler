@@ -1,0 +1,30 @@
+{
+  "name": "distributed-job-scheduler",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "db:up": "docker compose up -d",
+    "db:down": "docker compose down",
+    "pg:start": "pg_ctl -D .pgdata -o \"-p 5433\" -l .pgdata/server.log start",
+    "pg:stop": "pg_ctl -D .pgdata stop",
+    "migrate": "node --env-file=.env db/migrate.ts",
+    "worker": "node --env-file=.env src/worker-main.ts",
+    "scheduler": "node --env-file=.env src/scheduler-main.ts",
+    "api": "node --env-file=.env src/api-main.ts",
+    "demo": "node --env-file=.env scripts/demo.ts",
+    "test": "node --env-file=.env --test --test-concurrency=1 \"test/**/*.test.ts\"",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@fastify/jwt": "^10.1.0",
+    "cron-parser": "^4.9.0",
+    "fastify": "^5.9.0",
+    "pg": "^8.13.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "@types/pg": "^8.11.10",
+    "typescript": "^5.7.0"
+  }
+}
