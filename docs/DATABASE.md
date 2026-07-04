@@ -22,18 +22,97 @@ erDiagram
   workers ||--o{ worker_heartbeats : beats
   workers |o--o{ job_executions : ran
 
-  organizations { bigint id PK }
-  users { bigint id PK; bigint org_id FK; text email UK }
-  projects { bigint id PK; bigint org_id FK }
-  retry_policies { bigint id PK; bigint project_id FK; enum strategy; int base_delay_s; int max_attempts }
-  queues { bigint id PK; bigint project_id FK; int priority; int concurrency_limit; enum status; bigint retry_policy_id FK }
-  jobs { bigint id PK; bigint project_id FK; bigint queue_id FK; enum type; enum status; int priority; jsonb payload; text idempotency_key; timestamptz run_at; bigint worker_id FK; bigint lease_token; timestamptz lease_expires_at; int attempts; bigint batch_id }
-  job_executions { bigint id PK; bigint job_id FK; int attempt; bigint worker_id FK; enum status; timestamptz started_at; timestamptz finished_at; text error }
-  job_logs { bigint id PK; bigint job_id FK; timestamptz ts; text level; text message }
-  workers { bigint id PK; text name; enum status; timestamptz last_seen }
-  worker_heartbeats { bigint id PK; bigint worker_id FK; timestamptz ts }
-  scheduled_jobs { bigint id PK; bigint project_id FK; bigint queue_id FK; text cron_expr; timestamptz next_run_at; bool active }
-  dead_letter_queue { bigint id PK; bigint job_id FK; bigint queue_id FK; bigint project_id FK; text reason; int attempts; timestamptz failed_at }
+  organizations {
+    bigint id PK
+    text name
+  }
+  users {
+    bigint id PK
+    bigint org_id FK
+    text email UK
+    text password_hash
+  }
+  projects {
+    bigint id PK
+    bigint org_id FK
+    text name
+  }
+  retry_policies {
+    bigint id PK
+    bigint project_id FK
+    enum strategy
+    int base_delay_s
+    int max_attempts
+  }
+  queues {
+    bigint id PK
+    bigint project_id FK
+    int priority
+    int concurrency_limit
+    enum status
+    bigint retry_policy_id FK
+  }
+  jobs {
+    bigint id PK
+    bigint project_id FK
+    bigint queue_id FK
+    enum type
+    enum status
+    int priority
+    jsonb payload
+    text idempotency_key
+    timestamptz run_at
+    bigint worker_id FK
+    bigint lease_token
+    timestamptz lease_expires_at
+    int attempts
+    bigint batch_id
+  }
+  job_executions {
+    bigint id PK
+    bigint job_id FK
+    int attempt
+    bigint worker_id FK
+    enum status
+    timestamptz started_at
+    timestamptz finished_at
+    text error
+  }
+  job_logs {
+    bigint id PK
+    bigint job_id FK
+    timestamptz ts
+    text level
+    text message
+  }
+  workers {
+    bigint id PK
+    text name
+    enum status
+    timestamptz last_seen
+  }
+  worker_heartbeats {
+    bigint id PK
+    bigint worker_id FK
+    timestamptz ts
+  }
+  scheduled_jobs {
+    bigint id PK
+    bigint project_id FK
+    bigint queue_id FK
+    text cron_expr
+    timestamptz next_run_at
+    bool active
+  }
+  dead_letter_queue {
+    bigint id PK
+    bigint job_id FK
+    bigint queue_id FK
+    bigint project_id FK
+    text reason
+    int attempts
+    timestamptz failed_at
+  }
 ```
 
 ## Primary keys  *(D13)*
